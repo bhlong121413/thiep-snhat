@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>🎂 Thiệp Sinh Nhật Xịn Xò</title>
+  <style>
+    :root{
+      --bg1:#0f172a;
+      --bg2:#1e293b;
+      --glass:rgba(255,255,255,.08);
+      --txt:#f8fafc;
+      --muted:#94a3b8;
+      --acc1:#f59e0b;
+      --acc2:#f43f5e;
+    }
+    *{box-sizing:border-box; margin:0; padding:0}
+    body{
+      font-family:'Segoe UI',Tahoma,sans-serif;
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      color:var(--txt);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    /* gradient animation background */
+    body::before{
+      content:'';
+      position:fixed; inset:0;
+      background:conic-gradient(from 0deg,#f59e0b,#f43f5e,#3b82f6,#8b5cf6,#22c55e,#f59e0b);
+      filter:blur(100px);
+      opacity:0.3;
+      animation:spin 30s linear infinite;
+      z-index:-2;
+    }
+    @keyframes spin{to{transform:rotate(1turn)}}
+
+    header,main,footer{width:min(960px,95%);margin:20px auto}
+    .card{
+      background:var(--glass);
+      backdrop-filter:blur(14px);
+      border-radius:24px;
+      padding:24px;
+      border:1px solid #ffffff20;
+      box-shadow:0 12px 40px rgba(0,0,0,.5);
+    }
+
+    h1{font-size:clamp(28px,5vw,48px); line-height:1.2; text-align:center; margin-bottom:12px;
+      background:linear-gradient(90deg,var(--acc1),var(--acc2));
+      -webkit-background-clip:text; color:transparent;
+      animation:glow 3s ease-in-out infinite alternate;
+    }
+    @keyframes glow{from{text-shadow:0 0 8px #f59e0b44} to{text-shadow:0 0 18px #f43f5eaa}}
+
+    .sub{text-align:center; color:var(--muted); margin-bottom:16px}
+    .btns{display:flex; flex-wrap:wrap; justify-content:center; gap:12px}
+    .btn{padding:12px 18px; border:none; border-radius:14px; font-weight:600; cursor:pointer;
+      background:linear-gradient(135deg,var(--acc1),var(--acc2)); color:#fff; box-shadow:0 4px 12px rgba(0,0,0,.4);
+      transition:transform .2s, box-shadow .3s;
+    }
+    .btn:hover{transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,.5)}
+
+    .cover{aspect-ratio:16/9; border-radius:18px; overflow:hidden; margin:16px 0; border:1px solid #ffffff30}
+    .cover img,.cover video{width:100%; height:100%; object-fit:cover}
+
+    h2{margin:16px 0 8px; font-size:clamp(20px,3vw,28px)}
+    p{line-height:1.6; margin-bottom:12px}
+
+    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+    .gallery img{width:100%;aspect-ratio:1;border-radius:14px;object-fit:cover;border:1px solid #ffffff30}
+
+    .audio{display:flex;align-items:center;gap:10px;margin-top:10px}
+    .progress{flex:1; height:6px; background:#334155; border-radius:6px; overflow:hidden}
+    .progress div{height:100%; background:linear-gradient(90deg,var(--acc1),var(--acc2)); width:0%}
+
+    footer{text-align:center; color:var(--muted); padding:20px 0}
+
+    /* balloons */
+    .balloon{position:fixed;bottom:-10vh;width:28px;height:36px;border-radius:50%;opacity:0.8;z-index:-1}
+    .balloon:after{content:'';position:absolute;top:34px;left:50%;width:2px;height:40px;background:#e5e7ebaa}
+
+    /* confetti */
+    canvas#confetti{position:fixed;inset:0;pointer-events:none;z-index:10}
+  </style>
+</head>
+<body>
+  <header class="card">
+    <h1 id="title">Happy Birthday 🎉</h1>
+    <div class="sub" id="subtitle">Chúc bạn một ngày sinh nhật rực rỡ – thêm tuổi, thêm niềm vui! ✨</div>
+    <div class="btns">
+      <button class="btn" id="confettiBtn">🎊 Bắn pháo giấy</button>
+      <button class="btn" id="musicBtn">🎶 Bật/Tắt nhạc</button>
+      <button class="btn" id="giftBtn">🎁 Xem quà</button>
+    </div>
+    <div class="cover"><img src="image0.jpeg" alt="Birthday"></div>
+  </header>
+
+  <main class="card" id="gift">
+    <section>
+      <h2>Video lời chúc 🎥</h2>
+      <div class="cover"><video controls loop playsinline><source src="clip-cmsn.mp4" type="video/mp4"></video></div>
+    </section>
+    <section>
+      <h2>Album kỷ niệm 📸</h2>
+      <div class="gallery">
+        <img src="image0.jpeg" alt="ảnh1">
+        <img src="image1.jpeg" alt="ảnh2">
+        <img src="image0.jpeg" alt="ảnh3">
+        <img src="image1.jpeg" alt="ảnh4">
+      </div>
+    </section>
+    <section>
+      <h2>Nhạc nền ♪</h2>
+      <div class="audio">
+        <button class="btn" style="padding:6px 12px" id="toggle">▶️</button>
+        <div class="progress"><div id="bar"></div></div>
+      </div>
+      <audio id="player" loop preload="auto"><source src="nhacthinhphong.mp3" type="audio/mpeg"></audio>
+      <small style="color:var(--muted)">iOS/Android có thể yêu cầu chạm để phát nhạc.</small>
+    </section>
+    <section>
+      <h2>Lời chúc 💌</h2>
+      <p id="message">Chúc <span id="name">Trần Thị Thanh Thảo</span> sinh nhật vui vẻ, ăn nhiều không béo, ngủ nhiều không muộn, tiền tiêu không hết và mãi hạnh phúc! 💛</p>
+    </section>
+  </main>
+
+  <footer>
+    Made with 💛 | <a href="#" id="share">Chia sẻ thiệp</a>
+  </footer>
+
+  <canvas id="confetti"></canvas>
+
+  <script>
+    // Personalize via URL
+    const params=new URLSearchParams(location.search);
+    const nm=params.get('name')||'Trần Thị Thanh Thảo';
+    const msg=params.get('msg');
+    document.getElementById('name').textContent=nm;
+    if(msg) document.getElementById('message').textContent=decodeURIComponent(msg);
+    document.getElementById('title').textContent=`Happy Birthday ${nm} 🎉`;
+
+    // Balloons
+    function spawnBalloon(){
+      const colors=['#fca5a5','#60a5fa','#fb923c','#818cf8','#34d399','#f59e0b'];
+      const b=document.createElement('div'); b.className='balloon';
+      b.style.left=Math.random()*100+'vw';
+      b.style.background=colors[Math.floor(Math.random()*colors.length)];
+      b.animate([{transform:'translateY(0)'},{transform:'translateY(-120vh)'}],{duration:10000+Math.random()*6000,iterations:1,easing:'linear'});
+      document.body.appendChild(b);
+      setTimeout(()=>b.remove(),12000);
+    }
+    setInterval(spawnBalloon,1200);
+
+    // Confetti
+    const c=document.getElementById('confetti'); const ctx=c.getContext('2d'); let W,H;
+    function resize(){W=c.width=innerWidth;H=c.height=innerHeight} resize(); addEventListener('resize',resize);
+    let pieces=[]; function burst(x=W/2,y=H/2,n=200){
+      for(let i=0;i<n;i++) pieces.push({x,y,r:2+Math.random()*4,a:Math.random()*2*Math.PI,v:2+Math.random()*5,life:100,color:`hsl(${Math.random()*360},100%,60%)`});
+    }
+    function draw(){ctx.clearRect(0,0,W,H); pieces.forEach((p,i)=>{p.x+=Math.cos(p.a)*p.v; p.y+=Math.sin(p.a)*p.v+2; p.v*=0.95; p.life--; ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();}); pieces=pieces.filter(p=>p.life>0); requestAnimationFrame(draw);} draw();
+    document.getElementById('confettiBtn').onclick=()=>burst();
+
+    // Music
+    const player=document.getElementById('player'); const bar=document.getElementById('bar');
+    function togglePlay(){ if(player.paused){player.play();} else {player.pause();} }
+    document.getElementById('toggle').onclick=togglePlay; document.getElementById('musicBtn').onclick=togglePlay;
+    player.addEventListener('timeupdate',()=>{ bar.style.width=(player.currentTime/player.duration*100)+"%" });
+
+    // Scroll gift
+    document.getElementById('giftBtn').onclick=()=>document.getElementById('gift').scrollIntoView({behavior:'smooth'});
+
+    // Share
+    document.getElementById('share').onclick=(e)=>{e.preventDefault(); const url=location.href; if(navigator.share) navigator.share({title:document.title,url}); else {navigator.clipboard.writeText(url); alert('Đã copy liên kết 🎉');}};
+  </script>
+</body>
+</html>
